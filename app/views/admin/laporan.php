@@ -9,19 +9,10 @@
     <style>
         /* CSS KHUSUS PRINT */
         @media print {
-            .no-print {
-                display: none !important; /* Hilangkan tombol saat diprint */
-            }
-            body {
-                background-color: white !important;
-                -webkit-print-color-adjust: exact;
-            }
-            .table-responsive {
-                overflow: visible !important; /* Biar tabel gak kepotong */
-            }
+            .no-print { display: none !important; }
+            body { background-color: white !important; -webkit-print-color-adjust: exact; }
+            .table-responsive { overflow: visible !important; }
         }
-        
-        /* Styling Halaman */
         body { background-color: #f8f9fa; color: #333; }
         .kop-surat { border-bottom: 3px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
         .logo-text { font-weight: 800; font-size: 24px; color: #D885A3; text-transform: uppercase; letter-spacing: 2px; }
@@ -29,7 +20,9 @@
 </head>
 <body class="p-5">
 
-    <div class="container bg-white p-5 shadow-sm rounded-4" style="min-height: 297mm;"> <div class="d-flex justify-content-between mb-4 no-print">
+    <div class="container bg-white p-5 shadow-sm rounded-4" style="min-height: 297mm;">
+        
+        <div class="d-flex justify-content-between mb-4 no-print">
             <a href="<?= BASEURL; ?>/admin" class="btn btn-outline-secondary">
                 &larr; Kembali ke Dashboard
             </a>
@@ -66,18 +59,19 @@
                     $grandTotal = 0;
                     if(!empty($data['orders'])): 
                         foreach($data['orders'] as $order): 
-                            $grandTotal += $order['total_price'];
+                            // PERBAIKAN: Gunakan 'total_amount' sesuai database
+                            $grandTotal += $order['total_amount']; 
                     ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
                         <td class="text-center"><?= date('d/m/Y', strtotime($order['created_at'])); ?></td>
-                        <td class="text-center fw-bold text-primary">#<?= $order['id']; ?></td>
+                        <td class="text-center fw-bold text-primary">#<?= $order['invoice_number']; ?></td>
                         <td><?= $order['customer_name']; ?></td>
-                        <td class="text-end fw-bold">Rp <?= number_format($order['total_price'], 0, ',', '.'); ?></td>
+                        <td class="text-end fw-bold">Rp <?= number_format($order['total_amount'], 0, ',', '.'); ?></td>
                     </tr>
                     <?php endforeach; else: ?>
                     <tr>
-                        <td colspan="5" class="text-center py-4 text-muted">Belum ada data penjualan selesai.</td>
+                        <td colspan="5" class="text-center py-4 text-muted">Belum ada data penjualan selesai (Completed).</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
@@ -92,7 +86,7 @@
 
         <div class="row mt-5 pt-5">
             <div class="col-4 offset-8 text-center">
-                <p class="mb-5">Cianjur, <?= date('d F Y'); ?></p>
+                <p class="mb-5">Subang, <?= date('d F Y'); ?></p>
                 <br><br>
                 <p class="fw-bold text-decoration-underline mb-0">Administrator</p>
                 <small>Manager Keuangan</small>

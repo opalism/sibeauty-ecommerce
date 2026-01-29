@@ -39,6 +39,12 @@
         <li class="nav-item px-2">
             <a class="nav-link" href="<?= BASEURL; ?>/admin/orders"><i class="bi bi-receipt me-1"></i> Pesanan</a>
         </li>
+        
+        <li class="nav-item px-2">
+            <a class="nav-link text-warning fw-bold" href="<?= BASEURL; ?>/admin/laporan">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Laporan
+            </a>
+        </li>
       </ul>
       
       <div class="d-flex align-items-center">

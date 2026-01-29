@@ -304,4 +304,19 @@ class AdminController extends Controller {
         header('Location: ' . BASEURL . '/admin/products');
         exit;
     }
+
+    public function laporan() {
+        // Cek login admin dulu (Copy dari method index)
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+            header('Location: ' . BASEURL . '/auth/login');
+            exit;
+        }
+
+        $data['title'] = 'Laporan Penjualan';
+        $data['orders'] = $this->model('Order_model')->getCompletedOrders();
+        
+        // Kita tidak pakai header/footer admin biasa, 
+        // tapi buat view khusus biar hasil print-nya bersih.
+        $this->view('admin/laporan', $data);
+    }
 }

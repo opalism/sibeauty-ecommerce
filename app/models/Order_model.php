@@ -121,4 +121,15 @@ class Order_model {
         $this->db->execute();
         return $this->db->rowCount();
     }
+
+    // Tambahkan ini untuk fitur Laporan
+    public function getCompletedOrders() {
+        $query = "SELECT orders.*, users.name as customer_name 
+                  FROM " . $this->table . " 
+                  JOIN users ON orders.user_id = users.id 
+                  WHERE orders.status = 'completed' 
+                  ORDER BY orders.created_at DESC";
+        $this->db->query($query);
+        return $this->db->resultSet();
+    }
 }

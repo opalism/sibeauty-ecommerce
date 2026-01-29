@@ -1,70 +1,131 @@
 :root {
-    --primary-pink: #EDB5BF; /* Soft Rose */
-    --secondary-pink: #F8E8E8; /* Pastel Background */
-    --accent-dark: #4A4A4A; /* Neutral Dark Text */
-    --white: #FFFFFF;
-    --gold: #D4AF37; /* For accents like stars/badges */
+    --primary-pink: #D885A3;
+    --primary-hover: #c06c8a;
+    --bg-soft: #FFF5F7;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --shadow-soft: 0 10px 30px rgba(216, 133, 163, 0.15);
+    --font-main: 'Poppins', sans-serif;
 }
 
 body {
-    font-family: 'Poppins', sans-serif; /* Modern & Clean */
-    background-color: var(--secondary-pink);
-    color: var(--accent-dark);
+    font-family: var(--font-main);
+    background-color: #fcfcfc;
+    color: #444;
+    overflow-x: hidden;
 }
 
-/* Navbar Customization */
+/* --- NAVBAR GLASSMORPHISM --- */
 .navbar-sibeauty {
-    background-color: var(--white);
-    box-shadow: 0 2px 15px rgba(237, 181, 191, 0.2);
+    background-color: transparent;
+    transition: all 0.4s ease;
+    padding: 20px 0;
+}
+
+.navbar-scrolled {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--glass-border);
 }
 
 .nav-link {
-    color: var(--accent-dark);
     font-weight: 500;
-    transition: all 0.3s;
+    color: #555 !important;
+    transition: color 0.3s;
+    position: relative;
 }
 
 .nav-link:hover, .nav-link.active {
-    color: #D885A3;
+    color: var(--primary-pink) !important;
 }
 
-/* Hero Section */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-pink);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* --- HERO SECTION --- */
 .hero-section {
-    background: linear-gradient(135deg, #FFF0F3 0%, #FFFFFF 100%);
-    padding: 80px 0;
-    border-radius: 0 0 50px 50px;
+    background: linear-gradient(120deg, #fff0f5 0%, #fff 100%);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Product Card */
+/* INI KUNCI ANIMASINYA */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+.hero-animate-img {
+    animation: float 6s ease-in-out infinite;
+    filter: drop-shadow(0 20px 30px rgba(216, 133, 163, 0.2));
+}
+
+/* --- PRODUCT CARD --- */
 .card-product {
-    border: none;
-    border-radius: 15px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.03);
+    background: #fff;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     overflow: hidden;
 }
 
 .card-product:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-soft);
+    border-color: var(--primary-pink);
 }
 
 .card-product img {
-    height: 250px;
-    object-fit: cover;
-    background-color: #f0f0f0;
+    transition: transform 0.5s ease;
 }
 
+.card-product:hover img {
+    transform: scale(1.08);
+}
+
+/* --- BUTTONS --- */
 .btn-primary-custom {
-    background-color: #D885A3;
+    background: linear-gradient(45deg, var(--primary-pink), #e69ab5);
     border: none;
     border-radius: 50px;
     padding: 10px 25px;
     color: white;
-    transition: background 0.3s;
+    box-shadow: 0 4px 15px rgba(216, 133, 163, 0.4);
+    transition: all 0.3s;
 }
 
 .btn-primary-custom:hover {
-    background-color: #C06C8A;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(216, 133, 163, 0.6);
+    background: linear-gradient(45deg, #c06c8a, var(--primary-pink));
     color: white;
+}
+
+/* --- CATEGORY CARD --- */
+.category-card {
+    transition: all 0.3s;
+    cursor: pointer;
+}
+.category-card:hover .rounded-circle {
+    background-color: var(--primary-pink) !important;
+    transform: rotate(15deg);
+}
+.category-card:hover i {
+    color: white !important;
 }

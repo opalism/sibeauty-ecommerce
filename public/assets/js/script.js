@@ -80,4 +80,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     console.log("SIBEAUTY Script: Berhasil dimuat! 🚀");
+
+    // 5. NAVBAR SCROLL EFFECT (UI/UX)
+    // Mengubah tampilan navbar saat user scroll ke bawah
+    const navbar = document.querySelector('.navbar-sibeauty');
+    
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            navbar.classList.add('navbar-scrolled');
+            navbar.classList.remove('py-3'); // Kecilkan padding
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+            navbar.classList.add('py-3'); // Balikkan padding normal
+        }
+    });
 });

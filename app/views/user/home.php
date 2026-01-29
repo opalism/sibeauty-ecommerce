@@ -23,9 +23,9 @@
                     <div class="position-absolute top-50 start-50 translate-middle rounded-circle" style="width: 400px; height: 400px; background-color: rgba(216, 133, 163, 0.1); z-index: 1;"></div>
                     
                     <img src="https://watermark.lovepik.com/photo/20211208/large/lovepik-young-women-skin-care-products-display-cosmetics-picture_501587337.jpg" 
-                         class="img-fluid rounded-4 shadow-lg position-relative" 
+                         class="img-fluid rounded-4 position-relative hero-animate-img" 
                          alt="Sibeauty Banner" 
-                         style="z-index: 2; max-height: 450px; border: 8px solid white;">
+                         style="z-index: 2; max-height: 450px;">
                          
                     <div class="position-absolute bottom-0 start-0 bg-white p-3 rounded-4 shadow-sm d-none d-lg-block" style="z-index: 3; transform: translate(-20%, -20%);">
                         <div class="d-flex align-items-center">
@@ -57,9 +57,9 @@
             foreach($cats as $cat): 
             ?>
             <div class="col-6 col-md-3">
-                <div class="card border-0 bg-transparent">
+                <div class="card border-0 bg-transparent category-card">
                     <div class="rounded-circle bg-white mx-auto d-flex align-items-center justify-content-center shadow-sm" 
-                         style="width: 120px; height: 120px; border: 2px solid #FDEFF4;">
+                         style="width: 120px; height: 120px; border: 2px solid #FDEFF4; transition: 0.3s;">
                         <i class="bi <?= $cat['icon']; ?> fs-1" style="color: #D885A3;"></i>
                     </div>
                     <p class="mt-3 fw-bold text-secondary"><?= $cat['name']; ?></p>
@@ -106,8 +106,9 @@
     </div>
 </section>
 
-
 <style>
+    /* Styling tambahan ini bisa dihapus jika style.css sudah diupdate, 
+       tapi dibiarkan saja juga aman buat jaga-jaga */
     .btn-primary-custom {
         background-color: #D885A3 !important;
         color: white !important;

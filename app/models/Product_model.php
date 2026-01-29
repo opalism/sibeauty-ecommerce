@@ -160,4 +160,19 @@ class Product_model {
         $this->db->execute();
         return $this->db->rowCount();
     }
+
+    // --- TAMBAHAN UNTUK HOMEPAGE ---
+    
+    // 8. Ambil Produk Terbaru (Limit untuk tampilan Home)
+    public function getLatestProducts($limit = 8) {
+        $query = "SELECT products.*, categories.name as category_name 
+                  FROM products 
+                  JOIN categories ON products.category_id = categories.id 
+                  ORDER BY products.id DESC LIMIT :limit";
+        $this->db->query($query);
+        $this->db->bind('limit', $limit);
+        return $this->db->resultSet();
+    }
+
+    
 }

@@ -19,16 +19,21 @@ class Order_model {
         return $this->db->single();
     }
 
+    // PERBAIKAN 1: Ganti 'order_items' jadi 'order_details' sesuai data di SQL kamu
     public function getOrderItems($order_id) {
-        $this->db->query("SELECT * FROM order_items WHERE order_id=:order_id");
+        // Kita JOIN ke products biar bisa ambil nama dan gambar produknya sekalian
+        $query = "SELECT order_details.*, products.name, products.image 
+                  FROM order_details 
+                  JOIN products ON order_details.product_id = products.id 
+                  WHERE order_details.order_id = :order_id";
+                  
+        $this->db->query($query);
         $this->db->bind('order_id', $order_id);
         return $this->db->resultSet();
     }
 
     public function createOrder($data) {
-        // ... (Logika createOrder biarkan seperti sebelumnya atau sesuaikan jika perlu)
-        // Untuk mempersingkat, pastikan fungsi createOrder kamu yang lama tetap ada jika sudah jalan
-        // Disini saya fokus menambahkan method baru di bawah ini:
+        // ... (Logika createOrder disesuaikan dengan controller Checkout kamu)
     }
     
     // --- UPDATE STATUS ---
@@ -40,23 +45,23 @@ class Order_model {
         return $this->db->rowCount();
     }
 
-    // --- [BARU] HITUNG JUMLAH PESANAN (Untuk Dashboard) ---
+    // --- HITUNG JUMLAH PESANAN (Untuk Dashboard) ---
     public function countOrders() {
         $this->db->query("SELECT COUNT(*) as total FROM " . $this->table);
         $result = $this->db->single();
         return $result['total'];
     }
 
-    // --- [BARU] HITUNG TOTAL PENDAPATAN (Untuk Dashboard) ---
+    // --- HITUNG TOTAL PENDAPATAN (Untuk Dashboard) ---
     public function calculateIncome() {
-        $this->db->query("SELECT SUM(total_price) as total FROM " . $this->table . " WHERE status = 'completed'");
+        // PERBAIKAN 2: Ganti 'total_price' jadi 'total_amount'
+        $this->db->query("SELECT SUM(total_amount) as total FROM " . $this->table . " WHERE status = 'completed'");
         $result = $this->db->single();
-        return $result['total'] ?? 0; // Kembalikan 0 jika belum ada data
+        return $result['total'] ?? 0;
     }
 
-    // --- [BARU] AMBIL DATA UNTUK LAPORAN ---
+    // --- AMBIL DATA UNTUK LAPORAN ---
     public function getCompletedOrders() {
-        // Join dengan tabel users untuk dapat nama pembeli
         $query = "SELECT orders.*, users.name as customer_name 
                   FROM " . $this->table . " 
                   JOIN users ON orders.user_id = users.id 

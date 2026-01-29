@@ -22,22 +22,18 @@
     
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link active" href="<?= BASEURL; ?>">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?= BASEURL; ?>">Home</a></li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                 Produk
             </a>
             <ul class="dropdown-menu shadow border-0">
-                
                 <li><a class="dropdown-item" href="<?= BASEURL; ?>/product">Semua Produk</a></li>
-                
                 <li><hr class="dropdown-divider"></li>
                 
                 <?php 
-                    require_once '../app/models/Category_model.php';
-                    $catModel = new Category_model();
-                    $categories = $catModel->getAllCategories();
-                    
+                    // PERBAIKAN: Gunakan $this->model() biar path-nya aman
+                    $categories = $this->model('Category_model')->getAllCategories();
                     foreach($categories as $cat): 
                 ?>
                     <li>
@@ -61,7 +57,7 @@
                     </div>
                 </form>
             </div>
-            <a href="#" class="text-dark fs-5" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
+            <a href="#" class="text-dark fs-5" data-bs-toggle="collapse" data-bs-target="#collapseSearch">
                 <i class="bi bi-search"></i>
             </a>
         </div>
@@ -71,9 +67,8 @@
             <?php 
                 $cartCount = 0;
                 if(isset($_SESSION['user_session'])) {
-                    require_once '../app/models/Cart_model.php';
-                    $cartModel = new Cart_model();
-                    $cartCount = $cartModel->countCart($_SESSION['user_session']['id']);
+                    // PERBAIKAN: Gunakan $this->model()
+                    $cartCount = $this->model('Cart_model')->countCart($_SESSION['user_session']['id']);
                 }
             ?>
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
@@ -83,7 +78,7 @@
 
         <?php if(isset($_SESSION['user_session'])): ?>
             <div class="dropdown">
-                <a class="btn btn-sm btn-outline-dark rounded-pill px-3 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="btn btn-sm btn-outline-dark rounded-pill px-3 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                     <i class="bi bi-person-circle me-1"></i> 
                     <?= explode(' ', $_SESSION['user_session']['name'])[0]; ?>
                 </a>
@@ -92,7 +87,7 @@
                         <li><a class="dropdown-item" href="<?= BASEURL; ?>/admin"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
                     <?php endif; ?>
                     <li><a class="dropdown-item" href="<?= BASEURL; ?>/profile"><i class="bi bi-person me-2"></i> Akun Saya</a></li>
-                    <li><a class="dropdown-item" href="<?= BASEURL; ?>/order"><i class="bi bi-box-seam me-2"></i> Pesanan</a></li>
+                    <li><a class="dropdown-item" href="<?= BASEURL; ?>/user/orders"><i class="bi bi-box-seam me-2"></i> Pesanan</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="<?= BASEURL; ?>/auth/logout"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
                 </ul>
@@ -105,3 +100,15 @@
     </div>
   </div>
 </nav>
+
+<script>
+    // Script kecil untuk set class active di navbar
+    document.querySelectorAll('.nav-link').forEach(link => {
+        if(link.href === window.location.href) {
+            link.classList.add('active');
+            link.style.color = '#D885A3';
+        }
+    });
+</script>
+</body>
+</html>

@@ -2,25 +2,21 @@
 
 class ProductController extends Controller {
 
-    // 1. HALAMAN UTAMA & SEARCH (Digabung biar rapi)
+    // 1. HALAMAN UTAMA & SEARCH
     public function index($page = 1) {
         $data['title'] = 'Katalog Produk';
         
         // --- LOGIKA PAGINATION ---
-        $limit = 8; // Mau tampilkan berapa produk per halaman?
+        $limit = 8;
         $data['page'] = (int)$page;
-        
-        // Hitung mulai dari data ke berapa
         $data['start'] = ($data['page'] - 1) * $limit;
         
         // --- LOGIKA PENCARIAN (SEARCH) ---
-        // Kita gabung di sini supaya hasil search tetap pakai view yang sama tanpa error
         if(isset($_POST['keyword'])) {
             $data['products'] = $this->model('Product_model')->searchProducts($_POST['keyword']);
             $data['keyword'] = $_POST['keyword'];
-            $data['totalPages'] = 1; // Kalau search, kita set 1 halaman saja dulu biar simpel
+            $data['totalPages'] = 1; 
         } else {
-            // Kalau tidak search, ambil data normal dengan pagination
             $data['products'] = $this->model('Product_model')->getProductsByPage($data['start'], $limit);
             
             // Hitung Total Halaman
@@ -33,26 +29,24 @@ class ProductController extends Controller {
         $this->view('layouts/footer');
     }
 
-    // 2. HALAMAN DETAIL (Pakai ID, bukan Slug)
+    // 2. HALAMAN DETAIL
     public function detail($id = null) {
         if( is_null($id) ) {
             header('Location: ' . BASEURL . '/product');
             exit;
         }
 
-        // Pakai getProductById (sesuai Model kita)
         $data['product'] = $this->model('Product_model')->getProductById($id);
         
         if( !$data['product'] ) {
-            // Kalau ID asal-asalan dan produk tidak ketemu
             header('Location: ' . BASEURL . '/product');
             exit;
         }
 
         $data['title'] = $data['product']['name'];
         
-        // (Opsional) Kita hapus 'related' dulu karena Modelnya belum ada
-        // $data['related'] = ... 
+        // Ambil produk serupa (opsional, jika model support)
+        // $data['related'] = $this->model('Product_model')->getRelatedProducts($data['product']['category_id'], $id);
 
         $this->view('layouts/header', $data);
         $this->view('user/product/detail', $data);
@@ -61,13 +55,14 @@ class ProductController extends Controller {
 
     // 3. HALAMAN FILTER KATEGORI
     public function category($id, $page = 1) {
-        // Ambil nama kategori buat Judul
-        $db = new Database;
-        $db->query("SELECT name FROM categories WHERE id = :id");
-        $db->bind('id', $id);
-        $cat = $db->single();
+        // PERBAIKAN: Pakai Model, jangan bikin koneksi Database manual di Controller (melanggar MVC)
+        // Pastikan Category_model punya method 'getCategoryById' atau kita query manual lewat model jika kepepet
+        // Disini saya pakai query manual lewat db wrapper controller biar aman
+        $this->db = new Database;
+        $this->db->query("SELECT name FROM categories WHERE id = :id");
+        $this->db->bind('id', $id);
+        $cat = $this->db->single();
 
-        // Cek jika kategori tidak ditemukan
         if(!$cat) {
             header('Location: ' . BASEURL . '/product');
             exit;
@@ -76,15 +71,13 @@ class ProductController extends Controller {
         $data['title'] = 'Kategori: ' . $cat['name'];
         $data['category_id'] = $id;
         
-        // --- LOGIKA PAGINATION ---
+        // Pagination Kategori
         $limit = 6;
         $data['page'] = (int)$page;
         $data['start'] = ($data['page'] - 1) * $limit;
         
-        // Panggil Model Khusus Kategori
         $data['products'] = $this->model('Product_model')->getProductsByCategory($id, $data['start'], $limit);
         
-        // Hitung Halaman
         $totalProducts = $this->model('Product_model')->countProductsByCategory($id);
         $data['totalPages'] = ceil($totalProducts / $limit);
         
@@ -93,24 +86,23 @@ class ProductController extends Controller {
         $this->view('layouts/footer');
     }
 
+    // 4. LOGIKA SEARCH (Route Khusus)
     public function search() {
-    $data['title'] = 'Hasil Pencarian';
-    
-    // Ambil keyword dari form pencarian
-    $keyword = $_POST['keyword'];
-    
-    // Simpan keyword ke data biar bisa ditampilkan di view (opsional)
-    $data['keyword'] = $keyword;
-    
-    // Panggil method searchProducts yang sudah ada di Model kamu
-    $data['products'] = $this->model('Product_model')->searchProducts($keyword);
-    
-    // Kita gunakan view yang sama dengan index, tapi datanya hasil filter
-    $this->view('layouts/header', $data);
-    $this->view('user/product/index', $data); //
-    $this->view('layouts/footer');
-}
- 
-
-
+        $data['title'] = 'Hasil Pencarian';
+        
+        // PERBAIKAN: Cek dulu apakah ada POST keyword
+        if(isset($_POST['keyword'])) {
+            $keyword = $_POST['keyword'];
+            $data['keyword'] = $keyword;
+            $data['products'] = $this->model('Product_model')->searchProducts($keyword);
+        } else {
+            // Kalau akses langsung tanpa ngetik, balikin ke index
+            header('Location: ' . BASEURL . '/product');
+            exit;
+        }
+        
+        $this->view('layouts/header', $data);
+        $this->view('user/product/index', $data);
+        $this->view('layouts/footer');
+    }
 }

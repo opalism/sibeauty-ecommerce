@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2026 at 05:58 AM
+-- Generation Time: Jan 30, 2026 at 05:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,15 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `carts`
+-- Table structure for table `cart`
 --
 
-CREATE TABLE `carts` (
+CREATE TABLE `cart` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`) VALUES
+(1, 4, 34, 8);
 
 -- --------------------------------------------------------
 
@@ -85,7 +92,13 @@ INSERT INTO `orders` (`id`, `user_id`, `invoice_number`, `total_amount`, `paymen
 (1, 3, 'INV-1768526881957', 520000.00, 'Bank BRI', 'completed', 'jalancagak, subang, 33333', '2026-01-16 01:28:01', 'PAY-1768526918.jpeg', '2026-01-16 01:28:01'),
 (2, 3, 'INV-1768527683444', 900000.00, 'Bank BCA', 'completed', 'subanghuh, subang, 33333', '2026-01-16 01:41:23', 'PAY-1768527725.jpeg', '2026-01-16 01:41:23'),
 (3, 4, 'INV-1768896647614', 580000.00, 'Bank BRI', 'shipped', 'Rancasari, Pamanukan, Subang, Subang, 41254', '2026-01-20 08:10:47', 'PAY-1768896675.png', '2026-01-20 08:10:47'),
-(4, 4, 'INV-1768896958565', 520000.00, 'Bank BCA', 'paid', 'Rancasari, Pamanukan, Subang, Subang, 41254', '2026-01-20 08:15:58', 'PAY-1768896976.png', '2026-01-20 08:15:58');
+(4, 4, 'INV-1768896958565', 520000.00, 'Bank BCA', 'paid', 'Rancasari, Pamanukan, Subang, Subang, 41254', '2026-01-20 08:15:58', 'PAY-1768896976.png', '2026-01-20 08:15:58'),
+(5, 4, 'INV/20260129/DAA9', 520000.00, 'Bank BCA', 'pending', 'JL. Rajawali 2 No.119, Cigadung, Kec. Subang, Kabupaten Subang, Jawa Barat 41213, KAB. SUBANG, 41212', '2026-01-29 06:51:40', NULL, '2026-01-29 06:51:40'),
+(6, 4, 'INV/20260129/8D9E', 520000.00, 'Bank BCA', 'pending', 'JL. Rajawali 2 No.119, Cigadung, Kec. Subang, Kabupaten Subang, Jawa Barat 41213, KAB. SUBANG, 41212', '2026-01-29 06:51:43', NULL, '2026-01-29 06:51:43'),
+(7, 4, 'INV/20260130/A47F', 4160000.00, 'Bank BCA', 'pending', 'JL. Rajawali 2 No.119, Cigadung, Kec. Subang, Kabupaten Subang, Jawa Barat 41213, KAB. SUBANG, 41212', '2026-01-30 16:14:21', NULL, '2026-01-30 16:14:21'),
+(8, 4, 'INV/20260130/5AE3', 4160000.00, 'Bank BCA', 'pending', 'JL. Rajawali 2 No.119, Cigadung, Kec. Subang, Kabupaten Subang, Jawa Barat 41213, KAB. SUBANG, 41212', '2026-01-30 16:18:52', NULL, '2026-01-30 16:18:52'),
+(9, 4, 'INV/20260130/501C', 4160000.00, 'Bank BCA', 'pending', 'JL. Rajawali 2 No.119, Cigadung, Kec. Subang, Kabupaten Subang, Jawa Barat 41213, KAB. SUBANG, 41212', '2026-01-30 16:18:54', NULL, '2026-01-30 16:18:54'),
+(10, 4, 'INV/20260130/906B', 4160000.00, 'Bank BCA', 'pending', 'JL. Rajawali 2 No.119, Cigadung, Kec. Subang, Kabupaten Subang, Jawa Barat 41213, KAB. SUBANG, 41212', '2026-01-30 16:19:04', NULL, '2026-01-30 16:19:04');
 
 -- --------------------------------------------------------
 
@@ -110,7 +123,10 @@ INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `price`, `quantity`
 (2, 2, 35, 480000.00, 1),
 (3, 2, 32, 420000.00, 1),
 (4, 3, 30, 580000.00, 1),
-(5, 4, 34, 520000.00, 1);
+(5, 4, 34, 520000.00, 1),
+(6, 8, 34, 520000.00, 8),
+(7, 9, 34, 520000.00, 8),
+(8, 10, 34, 520000.00, 8);
 
 -- --------------------------------------------------------
 
@@ -218,9 +234,9 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `phone`, `addres
 --
 
 --
--- Indexes for table `carts`
+-- Indexes for table `cart`
 --
-ALTER TABLE `carts`
+ALTER TABLE `cart`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `product_id` (`product_id`);
@@ -273,10 +289,10 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `carts`
+-- AUTO_INCREMENT for table `cart`
 --
-ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -288,13 +304,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `order_items`
@@ -317,13 +333,6 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `carts`
---
-ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `carts_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `orders`

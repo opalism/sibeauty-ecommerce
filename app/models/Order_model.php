@@ -8,13 +8,13 @@ class Order_model {
         $this->db = new Database;
     }
 
-    // --- FUNGSI CREATE ORDER (UPDATED) ---
+    // --- FUNGSI CREATE ORDER (SUDAH DISESUAIKAN DATABASE) ---
     public function createOrder($data, $items) {
         // 1. Generate Invoice Unik
         $invoice = 'INV/' . date('Ymd') . '/' . strtoupper(substr(uniqid(), -4));
 
         // 2. Insert ke Tabel Orders
-        // PERBAIKAN: Ganti 'address' menjadi 'shipping_address'
+        // Sesuai SQL: shipping_address (bukan address)
         $query = "INSERT INTO orders (user_id, invoice_number, total_amount, status, shipping_address, payment_method, created_at)
                   VALUES (:uid, :inv, :total, 'pending', :addr, :pm, NOW())";
 
@@ -22,7 +22,7 @@ class Order_model {
         $this->db->bind('uid', $data['user_id']);
         $this->db->bind('inv', $invoice);
         $this->db->bind('total', $data['total_amount']);
-        $this->db->bind('addr', $data['address']); // Data dari controller tetap 'address', masuk ke kolom 'shipping_address'
+        $this->db->bind('addr', $data['address']);
         $this->db->bind('pm', $data['payment_method']);
         $this->db->execute();
         
@@ -31,32 +31,22 @@ class Order_model {
 
         // 3. Pindahkan Keranjang ke Order Details
         foreach($items as $item) {
-            // Pastikan tabel ini ada di database (order_details)
-            $qDetail = "INSERT INTO order_details (order_id, product_id, quantity, price, subtotal)
-                        VALUES (:oid, :pid, :qty, :price, :sub)"; // Hapus kolom 'total_price' jika error lagi, sesuaikan kolom DB
+            // PERBAIKAN: Hapus 'subtotal' dari query karena kolomnya tidak ada di database
+            $qDetail = "INSERT INTO order_details (order_id, product_id, quantity, price)
+                        VALUES (:oid, :pid, :qty, :price)";
             
-            // Cek struktur tabel order_details kamu, biasanya: id, order_id, product_id, price, quantity, (subtotal - opsional)
-            // Kalau error "Column not found: subtotal", hapus subtotal dari query di atas.
-            
-            $subtotal = $item['price'] * $item['quantity']; // Hitung subtotal
-
+            // Subtotal kita hitung di view saja, tidak perlu disimpan di DB
             $this->db->query($qDetail);
             $this->db->bind('oid', $orderId);
             $this->db->bind('pid', $item['product_id']);
             $this->db->bind('qty', $item['quantity']);
             $this->db->bind('price', $item['price']); 
-            $this->db->bind('sub', $subtotal); // Hapus baris ini jika kolom subtotal tidak ada
             $this->db->execute();
         }
 
         // 4. Hapus Keranjang User
-        // Cek nama tabel keranjangmu: 'cart' atau 'carts'? Sesuaikan query ini.
-        // Di SQL kamu tabelnya 'carts', tapi model 'cart'. Saya pakai 'carts' sesuai SQL dump kamu.
-        $qCart = "DELETE FROM carts WHERE user_id = :uid"; 
-        
-        // JAGA-JAGA: Kalau tabelnya ternyata 'cart' (singular), uncomment baris bawah ini:
-        // $qCart = "DELETE FROM cart WHERE user_id = :uid";
-
+        // PERBAIKAN: Gunakan tabel 'carts' (jamak) sesuai file sibeauty.sql kamu
+        $qCart = "DELETE FROM carts WHERE user_id = :uid";
         $this->db->query($qCart);
         $this->db->bind('uid', $data['user_id']);
         $this->db->execute();
@@ -86,11 +76,15 @@ class Order_model {
     }
 
     public function getOrderItems($order_id) {
-        // Pastikan join ke tabel 'order_details' (bukan order_items yang kosong)
-        $query = "SELECT order_details.*, products.name, products.image 
+        // PERBAIKAN: Kita hitung subtotal secara otomatis di sini (virtual column)
+        // supaya View tidak error saat memanggil ['subtotal']
+        $query = "SELECT order_details.*, 
+                         (order_details.price * order_details.quantity) as subtotal,
+                         products.name, products.image 
                   FROM order_details 
                   JOIN products ON order_details.product_id = products.id 
                   WHERE order_details.order_id = :order_id";
+        
         $this->db->query($query);
         $this->db->bind('order_id', $order_id);
         return $this->db->resultSet();
@@ -111,7 +105,6 @@ class Order_model {
     }
 
     public function calculateIncome() {
-        // Sesuaikan nama kolom total: 'total_amount'
         $this->db->query("SELECT SUM(total_amount) as total FROM " . $this->table . " WHERE status = 'completed'");
         $result = $this->db->single();
         return $result['total'] ?? 0;

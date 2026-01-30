@@ -84,4 +84,7 @@ class Database {
     public function lastInsertId() {
         return $this->dbh->lastInsertId();
     }
+
+    // --- TAMBAHKAN INI DI BAGIAN BAWAH ---
+
 }

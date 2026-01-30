@@ -1,63 +1,76 @@
 <?php
+
 class Cart_model {
-    private $table = 'carts';
+    private $table = 'cart';
     private $db;
 
     public function __construct() {
         $this->db = new Database;
     }
 
-    // 1. Ambil semua isi keranjang user tertentu
+    // 1. AMBIL ISI KERANJANG USER
     public function getCartByUser($userId) {
-        // Kita JOIN dengan tabel products untuk ambil nama, harga, dan gambar
-        $query = "SELECT c.id as cart_id, c.quantity, p.id as product_id, p.name, p.price, p.image, p.slug 
-                  FROM carts c 
-                  JOIN products p ON c.product_id = p.id 
-                  WHERE c.user_id = :user_id";
-        
+        // Kita JOIN ke tabel products biar dapet nama, harga, dan gambar
+        $query = "SELECT cart.*, products.name, products.price, products.image, products.stock 
+                  FROM " . $this->table . " 
+                  JOIN products ON cart.product_id = products.id 
+                  WHERE cart.user_id = :user_id";
         $this->db->query($query);
         $this->db->bind('user_id', $userId);
         return $this->db->resultSet();
     }
 
-    // 2. Tambah barang ke keranjang
-    public function addItem($data) {
-        // Cek dulu apakah barang ini sudah ada di keranjang user?
-        $this->db->query("SELECT * FROM carts WHERE user_id = :uid AND product_id = :pid");
-        $this->db->bind('uid', $data['user_id']);
-        $this->db->bind('pid', $data['product_id']);
-        $existingItem = $this->db->single();
+    // 2. TAMBAH KE KERANJANG (INI YANG HILANG TADI)
+    public function addToCart($userId, $productId, $qty) {
+        // Cek dulu: Barang ini udah ada di keranjang user belum?
+        $this->db->query("SELECT * FROM " . $this->table . " WHERE user_id = :uid AND product_id = :pid");
+        $this->db->bind('uid', $userId);
+        $this->db->bind('pid', $productId);
+        $item = $this->db->single();
 
-        if($existingItem) {
-            // Jika sudah ada, update quantity-nya saja (+1)
-            $query = "UPDATE carts SET quantity = quantity + :qty WHERE id = :id";
+        if($item) {
+            // KASUS A: Barang sudah ada -> Tinggal tambah jumlahnya (Quantity)
+            $newQty = $item['quantity'] + $qty;
+            $query = "UPDATE " . $this->table . " SET quantity = :qty WHERE id = :id";
             $this->db->query($query);
-            $this->db->bind('qty', $data['quantity']);
-            $this->db->bind('id', $existingItem['id']);
+            $this->db->bind('qty', $newQty);
+            $this->db->bind('id', $item['id']);
         } else {
-            // Jika belum ada, buat baris baru
-            $query = "INSERT INTO carts (user_id, product_id, quantity) VALUES (:uid, :pid, :qty)";
+            // KASUS B: Barang belum ada -> Masukkan data baru
+            $query = "INSERT INTO " . $this->table . " (user_id, product_id, quantity) VALUES (:uid, :pid, :qty)";
             $this->db->query($query);
-            $this->db->bind('uid', $data['user_id']);
-            $this->db->bind('pid', $data['product_id']);
-            $this->db->bind('qty', $data['quantity']);
+            $this->db->bind('uid', $userId);
+            $this->db->bind('pid', $productId);
+            $this->db->bind('qty', $qty);
         }
-
+        
         $this->db->execute();
         return $this->db->rowCount();
     }
 
-    // 3. Hapus item dari keranjang
-    public function deleteItem($cartId) {
-        $this->db->query("DELETE FROM carts WHERE id = :id");
-        $this->db->bind('id', $cartId);
+    // 3. HAPUS BARANG DARI KERANJANG
+    public function removeFromCart($id) {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind('id', $id);
         $this->db->execute();
         return $this->db->rowCount();
     }
-    
-    // 4. Hitung jumlah barang (untuk badge di navbar)
+
+    // 4. UPDATE JUMLAH (Misal user ubah qty di halaman cart)
+    public function updateQuantity($id, $qty) {
+        $query = "UPDATE " . $this->table . " SET quantity = :qty WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind('qty', $qty);
+        $this->db->bind('id', $id);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+    // 5. HITUNG TOTAL ITEM (Buat notifikasi merah di navbar)
     public function countCart($userId) {
-        $this->db->query("SELECT SUM(quantity) as total FROM carts WHERE user_id = :uid");
+        $query = "SELECT SUM(quantity) as total FROM " . $this->table . " WHERE user_id = :uid";
+        $this->db->query($query);
         $this->db->bind('uid', $userId);
         $result = $this->db->single();
         return $result['total'] ?? 0;

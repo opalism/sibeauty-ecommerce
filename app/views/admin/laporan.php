@@ -10,7 +10,7 @@
         /* CSS KHUSUS PRINT */
         @media print {
             .no-print { display: none !important; }
-            body { background-color: white !important; -webkit-print-color-adjust: exact; }
+            body { background-color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .table-responsive { overflow: visible !important; }
         }
         body { background-color: #f8f9fa; color: #333; }
@@ -92,7 +92,6 @@
                 <small>Manager Keuangan</small>
             </div>
         </div>
-
     </div>
 
 </body>

@@ -58,10 +58,10 @@ class ProductController extends Controller {
         // PERBAIKAN: Pakai Model, jangan bikin koneksi Database manual di Controller (melanggar MVC)
         // Pastikan Category_model punya method 'getCategoryById' atau kita query manual lewat model jika kepepet
         // Disini saya pakai query manual lewat db wrapper controller biar aman
-        $this->db = new Database;
-        $this->db->query("SELECT name FROM categories WHERE id = :id");
-        $this->db->bind('id', $id);
-        $cat = $this->db->single();
+        $db = new Database;
+        $db->query("SELECT name FROM categories WHERE id = :id");
+        $db->bind('id', $id);
+        $cat = $db->single();
 
         if(!$cat) {
             header('Location: ' . BASEURL . '/product');

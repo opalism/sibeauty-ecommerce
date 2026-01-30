@@ -8,13 +8,13 @@ class Order_model {
         $this->db = new Database;
     }
 
-    // --- FUNGSI CREATE ORDER (SUDAH DISESUAIKAN DATABASE) ---
+    // --- FUNGSI CREATE ORDER ---
     public function createOrder($data, $items) {
-        // 1. Generate Invoice Unik
+        // 1. Generate Invoice
         $invoice = 'INV/' . date('Ymd') . '/' . strtoupper(substr(uniqid(), -4));
 
         // 2. Insert ke Tabel Orders
-        // Sesuai SQL: shipping_address (bukan address)
+        // Pastikan kolom 'shipping_address' (bukan address)
         $query = "INSERT INTO orders (user_id, invoice_number, total_amount, status, shipping_address, payment_method, created_at)
                   VALUES (:uid, :inv, :total, 'pending', :addr, :pm, NOW())";
 
@@ -26,16 +26,14 @@ class Order_model {
         $this->db->bind('pm', $data['payment_method']);
         $this->db->execute();
         
-        // Ambil ID Order yang barusan dibuat
         $orderId = $this->db->lastInsertId();
 
         // 3. Pindahkan Keranjang ke Order Details
         foreach($items as $item) {
-            // PERBAIKAN: Hapus 'subtotal' dari query karena kolomnya tidak ada di database
+            // Tanpa kolom 'subtotal' karena di database tidak ada
             $qDetail = "INSERT INTO order_details (order_id, product_id, quantity, price)
                         VALUES (:oid, :pid, :qty, :price)";
             
-            // Subtotal kita hitung di view saja, tidak perlu disimpan di DB
             $this->db->query($qDetail);
             $this->db->bind('oid', $orderId);
             $this->db->bind('pid', $item['product_id']);
@@ -45,8 +43,9 @@ class Order_model {
         }
 
         // 4. Hapus Keranjang User
-        // PERBAIKAN: Gunakan tabel 'carts' (jamak) sesuai file sibeauty.sql kamu
-        $qCart = "DELETE FROM carts WHERE user_id = :uid";
+        // PERBAIKAN DI SINI: Gunakan 'cart' (tanpa s)
+        $qCart = "DELETE FROM cart WHERE user_id = :uid";
+        
         $this->db->query($qCart);
         $this->db->bind('uid', $data['user_id']);
         $this->db->execute();
@@ -54,7 +53,7 @@ class Order_model {
         return $orderId;
     }
 
-    // --- FUNGSI ADMIN & DASHBOARD ---
+    // --- FUNGSI ADMIN & LAINNYA ---
 
     public function getAllOrders() {
         $query = "SELECT orders.*, users.name as user_name 
@@ -76,8 +75,7 @@ class Order_model {
     }
 
     public function getOrderItems($order_id) {
-        // PERBAIKAN: Kita hitung subtotal secara otomatis di sini (virtual column)
-        // supaya View tidak error saat memanggil ['subtotal']
+        // Hitung subtotal virtual
         $query = "SELECT order_details.*, 
                          (order_details.price * order_details.quantity) as subtotal,
                          products.name, products.image 

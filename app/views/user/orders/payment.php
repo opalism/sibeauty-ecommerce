@@ -87,7 +87,7 @@
                     <div class="text-center mt-4 border-top pt-4">
                         <p class="small text-muted mb-2">Mengalami kendala saat pembayaran?</p>
                         <a href="https://wa.me/6283195725280?text=Halo%20Admin,%20saya%20mau%20konfirmasi%20pembayaran%20Order%20ID:%20<?= $data['order']['invoice_number']; ?>" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-4">
-                            <i class="bi bi-whatsapp me-2"></i>Hubungi Admin
+                            <i class="bi bi-whatsapp me-2"></i>Hubungi CS
                         </a>
                     </div>
 

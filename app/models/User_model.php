@@ -31,9 +31,9 @@ class User_model {
 
     // 3. Ambil Data User Berdasarkan ID (Untuk Profil)
     public function getUserById($id) {
-        $this->db->query("SELECT * FROM " . $this->table . " WHERE id = :id");
-        $this->db->bind('id', $id);
-        return $this->db->single();
+    $this->db->query('SELECT * FROM ' . $this->table . ' WHERE id=:id');
+    $this->db->bind('id', $id);
+    return $this->db->single();
     }
 
     // 4. Update Profile User

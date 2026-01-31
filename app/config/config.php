@@ -1,9 +1,9 @@
 <?php
-// Sesuaikan dengan nama folder project kamu
+// Pastikan tidak ada spasi di 'sibeauty' dan 'public'
 define('BASEURL', 'http://localhost/sibeauty/public');
 
-// DB Constants
+// DB Setting (Ini udah bener kayaknya)
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'sibeauty');
+define('DB_NAME', 'sibeauty'); // Sesuaikan nama db kamu

@@ -1,11 +1,11 @@
 <IfModule mod_rewrite.c>
-    Options -Multiviews
-    RewriteEngine On
+  Options -Multiviews
+  RewriteEngine On
 
-    # Jika file/folder memang ada di folder public, jangan dialihkan
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+  # Ganti /sibeauty/public sesuai nama folder kamu!
+  RewriteBase /sibeauty/public
 
-    # Jika tidak ada, kirim semuanya ke index.php
-    RewriteRule ^(.*)$ index.php?url=$1 [L]
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 </IfModule>

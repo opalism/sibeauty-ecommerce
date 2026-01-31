@@ -45,13 +45,15 @@
                 $no = 1;
                 if(!empty($data['orders'])):
                     foreach($data['orders'] as $row):
-                        $grandTotal += $row['total_amount']; // PERBAIKAN: Gunakan total_amount
+                        $grandTotal += $row['total_amount']; 
             ?>
             <tr>
                 <td class="text-center"><?= $no++; ?></td>
                 <td><?= date('d/m/Y', strtotime($row['created_at'])); ?></td>
                 <td><?= $row['invoice_number']; ?></td>
-                <td><?= $row['customer_name']; ?></td>
+                
+                <td><?= $row['user_name']; ?></td>
+                
                 <td class="text-end">Rp <?= number_format($row['total_amount'], 0, ',', '.'); ?></td>
             </tr>
             <?php endforeach; else: ?>

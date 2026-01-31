@@ -30,7 +30,7 @@
                         <div>
                             <strong class="d-block text-dark mb-1"><i class="bi bi-wallet2 me-1"></i> E-Wallet:</strong>
                             <ul class="list-unstyled mb-0 ps-3 border-start border-warning border-3">
-                                <li>DANA: <strong>0851-3431-0760</strong> <span class="text-muted">(Naufal Alief)</span></li>
+                                <li>DANA: <strong>0851-3431-0760</strong> <span class="text-muted">(Naufal Alief Alghifari)</span></li>
                             </ul>
                         </div>
                     </div>

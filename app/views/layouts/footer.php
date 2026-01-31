@@ -3,8 +3,8 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <a href="<?= BASEURL; ?>" class="d-flex align-items-center text-dark text-decoration-none mb-3">
-                        <img src="<?= BASEURL; ?>/assets/img/logo.png" alt="Logo" width="40" height="40" class="me-2">
-                        <span class="fs-4 fw-bold" style="letter-spacing: -1px;">Sibeauty.</span>
+                        <img src="<?= BASEURL; ?>/assets/img/logo-3.png" alt="Logo" width="70%" height="70%" class="me-2">
+                        <span class="fs-4 fw-bold" style="letter-spacing: -1px;"></span>
                     </a>
                     <p class="text-muted small">Platform e-commerce skincare nomor #1 di Indonesia dengan produk 100% original dan terpercaya.</p>
                 </div>

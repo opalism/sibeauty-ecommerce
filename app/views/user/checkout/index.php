@@ -57,7 +57,7 @@
                                     <input class="form-check-input ms-1" type="radio" name="payment_method" value="Bank BRI" id="bri">
                                     <label class="form-check-label ms-2 d-flex justify-content-between fw-bold w-100" for="bri">
                                         <span>Transfer Bank BRI</span>
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.png" height="20" alt="BRI">
+                                        <img src="https://tse2.mm.bing.net/th/id/OIP.0pj0upGhy7h8Q-ZFTTM0XAHaGU?rs=1&pid=ImgDetMain&o=7&rm=3" height="40" alt="BRI">
                                     </label>
                                 </div>
 

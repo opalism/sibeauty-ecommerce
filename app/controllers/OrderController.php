@@ -62,33 +62,37 @@ class OrderController extends Controller {
 
     // 4. Proses Upload Bukti
     public function submitPayment() {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $orderId = $_POST['order_id'];
-            
-            // Upload Gambar
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $orderId = $_POST['order_id'];
+        
+        if(isset($_FILES['payment_proof']) && $_FILES['payment_proof']['error'] === 0) {
             $fileName = $_FILES['payment_proof']['name'];
             $tmpName  = $_FILES['payment_proof']['tmp_name'];
             
-            // Generate nama baru biar unik
             $ext = pathinfo($fileName, PATHINFO_EXTENSION);
             $newFileName = 'PAY-' . time() . '.' . $ext;
             
-            // Pindahkan
-            move_uploaded_file($tmpName, '../public/assets/img/payments/' . $newFileName);
-
-            // Update Database (Simpan nama file saja)
-            // Kita pakai Query manual disini biar cepat, atau bisa buat fungsi di Model
-            $db = new Database;
-            $db->query("UPDATE orders SET payment_proof = :proof WHERE id = :id");
-            $db->bind('proof', $newFileName);
-            $db->bind('id', $orderId);
-            $db->execute();
-
-            Flasher::setFlash('berhasil', 'bukti pembayaran diupload, tunggu konfirmasi admin', 'success');
-            header('Location: ' . BASEURL . '/order/detail/' . $orderId);
-            exit;
+            // Lokasi simpan file
+            $uploadPath = '../public/assets/img/payments/' . $newFileName;
+            
+            if(move_uploaded_file($tmpName, $uploadPath)) {
+                // Update ke database
+                $this->model('Order_model')->updatePaymentProof($orderId, $newFileName);
+                
+                Flasher::setFlash('Berhasil', 'Bukti pembayaran dikirim! Tunggu konfirmasi admin.', 'success');
+                header('Location: ' . BASEURL . '/order/detail/' . $orderId);
+                exit;
+            } else {
+                Flasher::setFlash('Gagal', 'Gagal upload file ke server.', 'danger');
+            }
+        } else {
+            Flasher::setFlash('Gagal', 'Pilih file bukti transfer dulu tot!', 'warning');
         }
+
+        header('Location: ' . BASEURL . '/order/payment/' . $orderId);
+        exit;
     }
+}
 
     // Halaman Cetak Invoice (Struk)
     public function invoice($id) {

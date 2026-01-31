@@ -63,10 +63,10 @@
                         <?php endif; ?>
 
                         <div class="bg-white d-flex align-items-center justify-content-center p-4 position-relative overflow-hidden" style="height: 220px;">
-                            <img src="<?= BASEURL; ?>/assets/img/<?= $product['image']; ?>" 
+                            <img src="<?= BASEURL; ?>/assets/img/products/<?= $product['image']; ?>" 
                                  class="img-fluid product-img transition-img" 
                                  alt="<?= $product['name']; ?>"
-                                 onerror="this.src='<?= BASEURL; ?>/assets/img/no-image.jpg'" 
+                                 onerror="this.src='<?= BASEURL; ?>/assets/img/no-image-3.jpg'" 
                                  style="max-height: 100%; object-fit: contain;">
                         </div>
 

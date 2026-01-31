@@ -28,7 +28,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
     <div class="container">
         <a class="navbar-brand" href="<?= BASEURL; ?>">
-            <img src="<?= BASEURL; ?>/assets/img/logo.png" 
+            <img src="<?= BASEURL; ?>/assets/img/logo-3.png" 
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" 
                  alt="SIBEAUTY">
             <span style="display:none; font-weight:700; color:#D885A3;">SIBEAUTY</span>

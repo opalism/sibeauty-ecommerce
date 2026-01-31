@@ -1,3 +1,7 @@
+<div class="container mt-3">
+    <?php Flasher::flash(); ?>
+</div>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
@@ -40,7 +44,7 @@
 
                                 <div class="d-flex align-items-center justify-content-between bg-white p-3 rounded-3 border">
                                     <div class="d-flex align-items-center gap-3">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.png" height="25" width="50" style="object-fit: contain;">
+                                        <img src="https://tse2.mm.bing.net/th/id/OIP.0pj0upGhy7h8Q-ZFTTM0XAHaGU?rs=1&pid=ImgDetMain&o=7&rm=3" height="25" width="50" style="object-fit: contain;">
                                         <div>
                                             <div class="small text-muted fw-bold">BANK BRI</div>
                                             <div class="fw-bold fs-5 text-dark user-select-all">0987-654-321</div>
@@ -56,7 +60,7 @@
                                         <div>
                                             <div class="small text-muted fw-bold">DANA (E-Wallet)</div>
                                             <div class="fw-bold fs-5 text-dark user-select-all">0851-3431-0760</div>
-                                            <div class="small text-muted">a.n Naufal Alief</div>
+                                            <div class="small text-muted">a.n Naufal Alief Alghifari</div>
                                         </div>
                                     </div>
                                     <button class="btn btn-light btn-sm rounded-circle" onclick="navigator.clipboard.writeText('085134310760')"><i class="bi bi-files"></i></button>
@@ -65,7 +69,7 @@
                         </div>
                     </div>
 
-                    <form action="<?= BASEURL; ?>/order/uploadProof" method="POST" enctype="multipart/form-data">
+                    <form action="<?= BASEURL; ?>/order/submitPayment" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="order_id" value="<?= $data['order']['id']; ?>">
                         
                         <div class="mb-4">

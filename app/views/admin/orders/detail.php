@@ -113,6 +113,8 @@
                         <li><small class="text-muted d-block">Alamat Pengiriman</small> <?= $data['order']['shipping_address']; ?></li>
                     </ul>
                 </div>
+
+                
             </div>
         </div>
     </div>

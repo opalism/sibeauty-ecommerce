@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2026 at 09:37 AM
+-- Generation Time: Jan 31, 2026 at 01:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -94,6 +94,18 @@ CREATE TABLE `orders` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `invoice_number`, `total_amount`, `payment_method`, `status`, `shipping_address`, `order_date`, `payment_proof`, `created_at`) VALUES
+(1, 1, 'INV/20260131/15C1', 39000.00, 'Dana', 'pending', 'Rancasari, RT.005, RW.003 Rancasari, Pamanukan, 41254, Subang, 41211', '2026-01-31 08:54:36', NULL, '2026-01-31 08:54:36'),
+(2, 4, 'INV/20260131/10E5', 115000.00, 'Bank BCA', 'pending', 'Rancasari, RT.005, RW.003 Rancasari, Pamanukan, 41254, Pamanukan, Subang, Jawa Barat 41254', '2026-01-31 09:58:46', NULL, '2026-01-31 09:58:46'),
+(3, 4, 'INV/20260131/A70A', 42000.00, 'Bank BCA', 'cancelled', 'Rancasari, RT.005, RW.003 Rancasari, Pamanukan, 41254, Subang, Subang, Subang 41211', '2026-01-31 10:00:28', 'PAY-1769857558.jpg', '2026-01-31 10:00:28'),
+(4, 4, 'INV/20260131/7D05', 190000.00, 'Bank BRI', 'paid', 'Rancasari, RT.005, RW.003 Rancasari, Pamanukan, 41254, Subang, Subang, Subang 41211', '2026-01-31 10:07:13', NULL, '2026-01-31 10:07:13'),
+(5, 1, 'INV/20260131/3248', 39000.00, 'Bank BCA', 'paid', 'Jl. Marsinu No 5, Tegalkalapa Subang, Telp 0260-417853 Fax 0260-41411873, Subang, Subang, Subang 41211', '2026-01-31 12:39:23', 'PAY-1769863183.png', '2026-01-31 12:39:23'),
+(6, 4, 'INV/20260131/F93C', 139000.00, 'Bank BCA', 'shipping', 'Rancasari, RT.005, RW.003 Rancasari, Pamanukan, 41254, Subang, Subang, Subang 41211', '2026-01-31 12:40:30', 'PAY-1769863239.png', '2026-01-31 12:40:30');
+
 -- --------------------------------------------------------
 
 --
@@ -107,6 +119,19 @@ CREATE TABLE `order_details` (
   `price` decimal(10,2) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_details`
+--
+
+INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `price`, `quantity`) VALUES
+(1, 1, 2, 39000.00, 1),
+(2, 2, 2, 39000.00, 1),
+(3, 2, 7, 76000.00, 1),
+(4, 3, 1, 42000.00, 1),
+(5, 4, 8, 190000.00, 1),
+(6, 5, 2, 39000.00, 1),
+(7, 6, 3, 139000.00, 1);
 
 -- --------------------------------------------------------
 
@@ -147,20 +172,20 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `price`, `stock`, `gender`, `image`, `is_bestseller`, `created_at`) VALUES
-(1, 9, 'The Originote Hyalucera Moisturizer', '', 'Moisturizer viral 40rb-an dengan Hyaluron & Ceramide.', 42000.00, 500, 'women', 'originote-mois.jpg', 0, '2026-01-31 08:34:39'),
-(2, 9, 'Glad2Glow Blueberry 5% Ceramide', '', 'Moisturizer blueberry wangi segar untuk kulit berjerawat.', 39000.00, 450, 'women', 'glad2glow-berry.jpg', 0, '2026-01-31 08:34:39'),
-(3, 9, 'Skintific 5X Ceramide Barrier Repair', '', 'Ratu moisturizer! Memperbaiki skin barrier rusak dalam 24 jam.', 139000.00, 200, 'women', 'skintific-blue.jpg', 0, '2026-01-31 08:34:39'),
-(4, 9, 'Wardah Lightening Day Cream 30g', '', 'Krim pagi pencerah halal dengan Advanced Niacinamide.', 42000.00, 200, 'women', 'wardah-day.jpg', 0, '2026-01-31 08:34:39'),
-(5, 9, 'Ponds Age Miracle Night Cream', '', 'Krim malam anti-aging untuk usia 25 tahun ke atas.', 120000.00, 60, 'women', 'ponds-night.jpg', 0, '2026-01-31 08:34:39'),
-(6, 8, 'Somethinc 5% Niacinamide Sabi Beet', '', 'Serum pencerah kulit kusam, samarkan noda hitam.', 89000.00, 150, 'women', 'somethinc-niacin.jpg', 0, '2026-01-31 08:34:39'),
-(7, 8, 'Whitelab Brightening Face Serum', '', 'Serum Niacinamide 10% + Collagen. Glowing maksimal.', 76000.00, 120, 'women', 'whitelab-serum.jpg', 0, '2026-01-31 08:34:39'),
-(8, 8, 'Lacoco Dark Spot Essence', '', 'Essence ajaib penghilang bekas jerawat hitam membandel.', 190000.00, 40, 'women', 'lacoco-darkspot.jpg', 0, '2026-01-31 08:34:39'),
-(9, 8, 'Scarlett Whitening Acne Serum', '', 'Serum khusus kulit berjerawat dengan Tea Tree Water.', 75000.00, 100, 'women', 'scarlett-acne.jpg', 0, '2026-01-31 08:34:39'),
-(10, 8, 'Implora Luminous Brightening Serum', '', 'Serum 20 ribuan yang bagus buat mencerahkan.', 29000.00, 300, 'women', 'implora-serum.jpg', 0, '2026-01-31 08:34:39'),
-(11, 8, 'Hanasui Serum Vitamin C + Collagen', '', 'Serum oren legendaris, bikin wajah kenyal.', 25000.00, 250, 'women', 'hanasui-vitc.jpg', 0, '2026-01-31 08:34:39'),
-(12, 8, 'Bio Beauty Lab Luxurious Facial Oil', '', 'Face oil mewah untuk kulit kering dan anti-aging.', 195000.00, 30, 'women', 'biobeautylab.jpg', 0, '2026-01-31 08:34:39'),
-(13, 8, 'ElsheSkin Retinol Rejuvenating Serum', '', 'Serum retinol pemula untuk mencegah penuaan dini.', 139000.00, 50, 'women', 'elsheskin-retinol.jpg', 0, '2026-01-31 08:34:39'),
-(14, 8, 'Cosrx Snail Mucin Power Essence', '', 'Essence lendir siput Korea yang bikin kulit kenyal.', 180000.00, 40, 'women', 'cosrx-snail.jpg', 0, '2026-01-31 08:34:39'),
+(1, 9, 'The Originote Hyalucera Moisturizer', '', 'Moisturizer viral 40rb-an dengan Hyaluron & Ceramide.', 42000.00, 500, 'women', '697de2dec9c10.webp', 0, '2026-01-31 08:34:39'),
+(2, 9, 'Glad2Glow Blueberry 5% Ceramide', '', 'Moisturizer blueberry wangi segar untuk kulit berjerawat.', 39000.00, 450, 'women', '697de30210efb.jpg', 0, '2026-01-31 08:34:39'),
+(3, 9, 'Skintific 5X Ceramide Barrier Repair', '', 'Ratu moisturizer! Memperbaiki skin barrier rusak dalam 24 jam.', 139000.00, 200, 'women', '697de32728f94.jpg', 0, '2026-01-31 08:34:39'),
+(4, 9, 'Wardah Lightening Day Cream 30g', '', 'Krim pagi pencerah halal dengan Advanced Niacinamide.', 42000.00, 200, 'women', '697de35fcf6e5.jpg', 0, '2026-01-31 08:34:39'),
+(5, 9, 'Ponds Age Miracle Night Cream', '', 'Krim malam anti-aging untuk usia 25 tahun ke atas.', 120000.00, 60, 'women', '697de37922450.jpg', 0, '2026-01-31 08:34:39'),
+(6, 8, 'Somethinc 5% Niacinamide Sabi Beet', '', 'Serum pencerah kulit kusam, samarkan noda hitam.', 89000.00, 150, 'women', '697de38f1a468.jpg', 0, '2026-01-31 08:34:39'),
+(7, 8, 'Whitelab Brightening Face Serum', '', 'Serum Niacinamide 10% + Collagen. Glowing maksimal.', 76000.00, 120, 'women', '697de5e0837f9.jpg', 0, '2026-01-31 08:34:39'),
+(8, 8, 'Lacoco Dark Spot Essence', '', 'Essence ajaib penghilang bekas jerawat hitam membandel.', 190000.00, 40, 'women', '697de6091b8e4.jpg', 0, '2026-01-31 08:34:39'),
+(9, 8, 'Scarlett Whitening Acne Serum', '', 'Serum khusus kulit berjerawat dengan Tea Tree Water.', 75000.00, 100, 'women', '697de6210c778.jpg', 0, '2026-01-31 08:34:39'),
+(10, 8, 'Implora Luminous Brightening Serum', '', 'Serum 20 ribuan yang bagus buat mencerahkan.', 29000.00, 300, 'women', '697de63ba9bb2.jpg', 0, '2026-01-31 08:34:39'),
+(11, 8, 'Hanasui Serum Vitamin C + Collagen', '', 'Serum oren legendaris, bikin wajah kenyal.', 25000.00, 250, 'women', '697de6d2cecdd.jpg', 0, '2026-01-31 08:34:39'),
+(12, 8, 'Bio Beauty Lab Luxurious Facial Oil', '', 'Face oil mewah untuk kulit kering dan anti-aging.', 195000.00, 30, 'women', '697de714a27a9.jpg', 0, '2026-01-31 08:34:39'),
+(13, 8, 'ElsheSkin Retinol Rejuvenating Serum', '', 'Serum retinol pemula untuk mencegah penuaan dini.', 139000.00, 50, 'women', '697de72ee1d89.jpg', 0, '2026-01-31 08:34:39'),
+(14, 8, 'Cosrx Snail Mucin Power Essence', '', 'Essence lendir siput Korea yang bikin kulit kenyal.', 180000.00, 40, 'women', '697de74b810fe.jpg', 0, '2026-01-31 08:34:39'),
 (15, 7, 'Avoskin Miraculous Refine Toner', '', 'Exfoliating toner terbaik (AHA BHA PHA).', 149000.00, 80, 'women', 'avoskin-toner.jpg', 0, '2026-01-31 08:34:39'),
 (16, 7, 'NPURE Cica Toner Centella Asiatica', '', 'Toner wajah berjerawat, ada daun asli di dalamnya.', 100000.00, 90, 'women', 'npure-toner.jpg', 0, '2026-01-31 08:34:39'),
 (17, 7, 'Studio Tropik Priming Water', '', 'Setting spray dan primer makeup agar tahan lama.', 99000.00, 85, 'women', 'studiotropik.jpg', 0, '2026-01-31 08:34:39'),
@@ -181,7 +206,7 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `pri
 (32, 12, 'Make Over Powerstay Demi-Matte Cushion', '', 'Cushion coverage tinggi tahan 12 jam, hasil natural.', 215000.00, 50, 'women', 'makeover-cushion.jpg', 0, '2026-01-31 08:34:39'),
 (33, 12, 'Luxcrime Blur & Cover Two Way Cake', '', 'Bedak padat viral efek blur pori-pori.', 129000.00, 80, 'women', 'luxcrime-twc.jpg', 0, '2026-01-31 08:34:39'),
 (34, 12, 'Somethinc Hooman Breathable Cushion', '', 'Cushion hybrid mesh, finish matte anti-geser.', 189000.00, 60, 'women', 'somethinc-hooman.jpg', 0, '2026-01-31 08:34:39'),
-(35, 12, 'Looke Holy Flawless BB Cushion', '', 'Cushion brand lokal premium dengan finish satin.', 225000.00, 30, 'women', 'looke-cushion.jpg', 0, '2026-01-31 08:34:39'),
+(35, 12, 'Looke Holy Flawless BB Cushion', '', 'Cushion brand lokal premium dengan finish satin.', 225000.00, 30, 'women', '697de6b65caa3.jpg', 0, '2026-01-31 08:34:39'),
 (36, 12, 'BLP Beauty Face Powder', '', 'Bedak tabur super halus, hasil makeup natural.', 149000.00, 45, 'women', 'blp-powder.jpg', 0, '2026-01-31 08:34:39'),
 (37, 12, 'Mother of Pearl (MOP) Primer', '', 'Primer Tasya Farasya, makeup nempel seharian.', 169000.00, 35, 'women', 'mop-primer.jpg', 0, '2026-01-31 08:34:39'),
 (38, 12, 'ESQA Goddess Cheek Palette', '', 'Palette blush, bronzer, dan highlighter pigmentasi juara.', 295000.00, 25, 'women', 'esqa-palette.jpg', 0, '2026-01-31 08:34:39'),
@@ -244,8 +269,8 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `pri
 (95, 20, 'Carl & Claire Black Orchid', '', 'Parfum elegan wangi bunga anggrek hitam.', 279000.00, 25, 'women', 'carlclaire.jpg', 0, '2026-01-31 08:34:39'),
 (96, 20, 'Evangeline Eau De Parfum Black Sakura', '', 'Parfum minimarket wangi enak dan murah.', 30000.00, 300, 'women', 'evangeline.jpg', 0, '2026-01-31 08:34:39'),
 (97, 21, 'Kahf Revered Oud EDT 35ml', '', 'Parfum pria halal aroma Oud & Amber.', 70000.00, 150, 'women', 'kahf-oud.jpg', 0, '2026-01-31 08:34:39'),
-(98, 21, 'Onix Senoparty', '', 'Parfum unisex wangi pesta jaksel.', 165000.00, 40, 'women', 'onix-senoparty.jpg', 0, '2026-01-31 08:34:39'),
-(99, 21, 'Gatsby White Up Eau De Toilette', '', 'Parfum pria wangi bersih dan sporty.', 35000.00, 250, 'women', 'gatsby-white.jpg', 0, '2026-01-31 08:34:39');
+(98, 21, 'Onix Senoparty', '', 'Parfum unisex wangi pesta jaksel.', 165000.00, 40, 'women', '697de689459da.jpg', 0, '2026-01-31 08:34:39'),
+(99, 21, 'Gatsby White Up Eau De Toilette', '', 'Parfum pria wangi bersih dan sporty.', 35000.00, 250, 'women', '697de66dc9bfc.jpg', 0, '2026-01-31 08:34:39');
 
 -- --------------------------------------------------------
 
@@ -336,7 +361,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -348,13 +373,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `order_items`

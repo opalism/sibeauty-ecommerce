@@ -8,180 +8,171 @@ class Product_model {
         $this->db = new Database;
     }
 
-    // 1. TAMBAH PRODUK (DULU HILANG, SEKARANG ADA)
-    public function addProduct($data) {
-        $query = "INSERT INTO products (name, slug, category_id, description, price, stock, gender, image) 
-                  VALUES (:name, :slug, :category_id, :description, :price, :stock, :gender, :image)";
-        
-        $this->db->query($query);
-        $this->db->bind('name', $data['name']);
-        $this->db->bind('slug', $data['slug']);
-        $this->db->bind('category_id', $data['category_id']);
-        $this->db->bind('description', $data['description']);
-        $this->db->bind('price', $data['price']);
-        $this->db->bind('stock', $data['stock']);
-        $this->db->bind('gender', $data['gender']);
-        $this->db->bind('image', $data['image']);
-
-        $this->db->execute();
-        return $this->db->rowCount();
-    }
-
-    // 2. SEARCH PRODUK (PERBAIKAN: JOIN KATEGORI)
-    public function searchProducts($keyword) {
-        // Tambahkan JOIN agar nama kategori tetap muncul di hasil pencarian
+    // --- FUNGSI KHUSUS HOMEPAGE ---
+    public function getLatestProducts($limit = 8) {
         $query = "SELECT products.*, categories.name as category_name 
                   FROM " . $this->table . " 
-                  JOIN categories ON products.category_id = categories.id 
-                  WHERE products.name LIKE :keyword 
-                  OR categories.name LIKE :keyword";
-                  
+                  LEFT JOIN categories ON products.category_id = categories.id 
+                  ORDER BY products.created_at DESC 
+                  LIMIT :limit";
+        
         $this->db->query($query);
-        $this->db->bind('keyword', "%$keyword%");
+        $this->db->bind('limit', $limit);
         return $this->db->resultSet();
     }
 
-    // 3. FILTER BY KATEGORI (PERBAIKAN: JOIN KATEGORI)
-    public function getProductsByCategory($categoryId, $start, $limit) {
+    // --- FUNGSI KATALOG & USER ---
+
+    public function getProductsByPage($start, $limit) {
         $query = "SELECT products.*, categories.name as category_name 
                   FROM " . $this->table . " 
-                  JOIN categories ON products.category_id = categories.id 
-                  WHERE products.category_id = :cat_id 
-                  ORDER BY products.id DESC LIMIT :start, :limit";
-                  
+                  LEFT JOIN categories ON products.category_id = categories.id 
+                  ORDER BY products.created_at DESC LIMIT :start, :limit";
+        
         $this->db->query($query);
-        $this->db->bind('cat_id', $categoryId);
         $this->db->bind('start', $start);
         $this->db->bind('limit', $limit);
         return $this->db->resultSet();
     }
 
-    // --- FUNGSI LAINNYA (SUDAH AMAN) ---
-    
-    public function getAllProducts() {
-        $this->db->query("SELECT products.*, categories.name as category_name 
-                          FROM products 
-                          JOIN categories ON products.category_id = categories.id 
-                          ORDER BY products.id DESC");
+    public function getProductsByCategory($categoryId, $start, $limit) {
+        $query = "SELECT products.*, categories.name as category_name 
+                  FROM " . $this->table . " 
+                  LEFT JOIN categories ON products.category_id = categories.id 
+                  WHERE products.category_id = :cid OR categories.parent_id = :cid
+                  ORDER BY products.created_at DESC LIMIT :start, :limit";
+        
+        $this->db->query($query);
+        $this->db->bind('cid', $categoryId);
+        $this->db->bind('start', $start);
+        $this->db->bind('limit', $limit);
+        return $this->db->resultSet();
+    }
+
+    public function searchProducts($keyword) {
+        $query = "SELECT products.*, categories.name as category_name 
+                  FROM " . $this->table . " 
+                  LEFT JOIN categories ON products.category_id = categories.id 
+                  WHERE products.name LIKE :keyword OR products.description LIKE :keyword";
+        
+        $this->db->query($query);
+        $this->db->bind('keyword', "%$keyword%");
         return $this->db->resultSet();
     }
 
     public function getProductById($id) {
         $query = "SELECT products.*, categories.name as category_name 
                   FROM " . $this->table . " 
-                  JOIN categories ON products.category_id = categories.id 
+                  LEFT JOIN categories ON products.category_id = categories.id 
                   WHERE products.id = :id";
+        
         $this->db->query($query);
         $this->db->bind('id', $id);
         return $this->db->single();
     }
 
-    public function getProductsByPage($start, $limit) {
-        $query = "SELECT products.*, categories.name as category_name 
-                  FROM products 
-                  JOIN categories ON products.category_id = categories.id 
-                  ORDER BY products.id DESC LIMIT :start, :limit";
-        $this->db->query($query);
-        $this->db->bind('start', $start);
-        $this->db->bind('limit', $limit);
-        return $this->db->resultSet();
-    }
+    // --- FUNGSI HITUNG (PAGINATION) ---
 
     public function countProducts() {
-        $this->db->query("SELECT COUNT(*) as total FROM products");
+        $this->db->query('SELECT COUNT(*) as total FROM ' . $this->table);
         $result = $this->db->single();
         return $result['total'];
     }
 
-    public function updateProduct($data, $file) {
-        $id = $data['id'];
-        $oldImage = $data['oldImage'];
+    public function countProductsByCategory($categoryId) {
+        $query = "SELECT COUNT(products.id) as total FROM " . $this->table . " 
+                  JOIN categories ON products.category_id = categories.id 
+                  WHERE products.category_id = :cid OR categories.parent_id = :cid";
+        $this->db->query($query);
+        $this->db->bind('cid', $categoryId);
+        $result = $this->db->single();
+        return $result['total'];
+    }
 
-        if($file['image']['error'] === 4) {
-            $image = $oldImage;
-        } else {
-            $image = $this->uploadImage($file);
-            if(!$image) return 0;
-            // Hapus gambar lama jika ada
-            if(file_exists('../public/assets/img/products/' . $oldImage) && $oldImage != 'default.jpg') {
-                unlink('../public/assets/img/products/' . $oldImage);
-            }
+    // --- FUNGSI ADMIN (CRUD) ---
+
+    public function getAllProducts() {
+        $query = "SELECT products.*, categories.name as category_name 
+                  FROM " . $this->table . " 
+                  LEFT JOIN categories ON products.category_id = categories.id 
+                  ORDER BY products.created_at DESC";
+        $this->db->query($query);
+        return $this->db->resultSet();
+    }
+
+    public function addProduct($data, $files) {
+        $image = $this->uploadImage($files);
+        if(!$image) return 0;
+
+        $query = "INSERT INTO products (name, description, price, stock, category_id, image, created_at)
+                  VALUES (:name, :desc, :price, :stock, :cat_id, :img, NOW())";
+        
+        $this->db->query($query);
+        $this->db->bind('name', $data['name']);
+        $this->db->bind('desc', $data['description']);
+        $this->db->bind('price', $data['price']);
+        $this->db->bind('stock', $data['stock']);
+        $this->db->bind('cat_id', $data['category_id']);
+        $this->db->bind('img', $image);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+    public function updateProduct($data, $files) {
+        $image = $data['old_image'];
+        if($files['image']['error'] !== 4) {
+            $image = $this->uploadImage($files);
         }
 
         $query = "UPDATE products SET 
                     name = :name, 
-                    category_id = :cat_id, 
                     description = :desc, 
                     price = :price, 
                     stock = :stock, 
+                    category_id = :cat_id, 
                     image = :img 
                   WHERE id = :id";
         
         $this->db->query($query);
         $this->db->bind('name', $data['name']);
-        $this->db->bind('cat_id', $data['category_id']);
         $this->db->bind('desc', $data['description']);
         $this->db->bind('price', $data['price']);
         $this->db->bind('stock', $data['stock']);
+        $this->db->bind('cat_id', $data['category_id']);
         $this->db->bind('img', $image);
-        $this->db->bind('id', $id);
-
+        $this->db->bind('id', $data['id']);
         $this->db->execute();
         return $this->db->rowCount();
-    }
-
-    public function uploadImage($file) {
-        $namaFile = $file['image']['name'];
-        $tmpName = $file['image']['tmp_name'];
-        $error = $file['image']['error'];
-
-        if($error === 4) return false;
-
-        $ekstensiValid = ['jpg', 'jpeg', 'png', 'webp'];
-        $pecahNama = explode('.', $namaFile);
-        $ekstensi = strtolower(end($pecahNama));
-
-        if(!in_array($ekstensi, $ekstensiValid)) return false;
-
-        $namaBaru = uniqid() . '.' . $ekstensi;
-        
-        // Simpan ke folder public/assets
-        move_uploaded_file($tmpName, '../public/assets/img/products/' . $namaBaru);
-
-        return $namaBaru;
-    }
-
-    public function addStock($id, $quantity) {
-        $query = "UPDATE products SET stock = stock + :qty WHERE id = :id";
-        $this->db->query($query);
-        $this->db->bind('qty', $quantity);
-        $this->db->bind('id', $id);
-        $this->db->execute();
-        return $this->db->rowCount();
-    }
-
-    public function countProductsByCategory($categoryId) {
-        $query = "SELECT COUNT(*) as total FROM products WHERE category_id = :cat_id";
-        $this->db->query($query);
-        $this->db->bind('cat_id', $categoryId);
-        $result = $this->db->single();
-        return $result['total'];
     }
 
     public function deleteProduct($id) {
-        $this->db->query("DELETE FROM products WHERE id = :id");
+        $this->db->query('DELETE FROM ' . $this->table . ' WHERE id=:id');
         $this->db->bind('id', $id);
         $this->db->execute();
         return $this->db->rowCount();
     }
 
-    public function getLatestProducts($limit = 8) {
-        $query = "SELECT products.*, categories.name as category_name 
-                  FROM products 
-                  JOIN categories ON products.category_id = categories.id 
-                  ORDER BY products.id DESC LIMIT :limit";
-        $this->db->query($query);
-        $this->db->bind('limit', $limit);
-        return $this->db->resultSet();
+    public function addStock($id, $qty) {
+        $this->db->query("UPDATE products SET stock = stock + :qty WHERE id = :id");
+        $this->db->bind('qty', $qty);
+        $this->db->bind('id', $id);
+        $this->db->execute();
+        return $this->db->rowCount();
     }
-}
+
+    // --- HELPER UPLOAD ---
+    private function uploadImage($files) {
+        $namaFile = $files['image']['name'];
+        $tmpName = $files['image']['tmp_name'];
+        $ext = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
+        
+        if(!in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) return false;
+
+        $namaBaru = uniqid() . '.' . $ext;
+        
+        // Simpan ke folder products biar rapi
+        move_uploaded_file($tmpName, '../public/assets/img/products/' . $namaBaru);
+        return $namaBaru;
+    }
+
+} // <--- INI DIA KURUNG TUTUP YANG TADI HILANG!

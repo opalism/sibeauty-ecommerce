@@ -1,137 +1,117 @@
-<div class="container py-5">
-    
+<div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <a href="<?= BASEURL; ?>/admin/orders" class="text-decoration-none text-muted mb-2 d-block">
-                <i class="bi bi-arrow-left"></i> Kembali ke Daftar
-            </a>
-            <h3 class="fw-bold">Order #<?= $data['order']['invoice_number']; ?></h3>
+            <h3 class="fw-bold text-secondary mb-1">Detail Pesanan #<?= $data['order']['invoice_number']; ?></h3>
+            <span class="text-muted small">ID Order: <?= $data['order']['id']; ?></span>
         </div>
-        
-        <a href="<?= BASEURL; ?>/order/invoice/<?= $data['order']['id']; ?>" target="_blank" class="btn btn-secondary rounded-pill shadow-sm">
-            <i class="bi bi-printer me-2"></i> Cetak Invoice
+        <a href="<?= BASEURL; ?>/admin/orders" class="btn btn-outline-secondary rounded-pill">
+            <i class="bi bi-arrow-left"></i> Kembali
         </a>
     </div>
 
-    <div class="mb-3">
-        <?php Flasher::flash(); ?>
-    </div>
-
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold">Daftar Produk</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Produk</th>
+                                <th>Harga</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end pe-4">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                                $grandTotal = 0;
+                                foreach($data['items'] as $item): 
+                                    $subtotal = $item['price'] * $item['quantity'];
+                                    $grandTotal += $subtotal;
+                            ?>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <img src="<?= BASEURL; ?>/assets/img/products/<?= $item['image']; ?>" 
+                                             class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                        <div>
+                                            <h6 class="mb-0"><?= $item['name']; ?></h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Rp <?= number_format($item['price'], 0, ',', '.'); ?></td>
+                                <td class="text-center"><?= $item['quantity']; ?></td>
+                                <td class="text-end pe-4 fw-bold">Rp <?= number_format($subtotal, 0, ',', '.'); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot class="bg-light">
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold py-3">Total Pesanan:</td>
+                                <td class="text-end pe-4 fw-bold fs-5 text-primary">
+                                    Rp <?= number_format($grandTotal, 0, ',', '.'); ?>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
             
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold text-muted text-uppercase mb-3">Status Pesanan</h6>
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Update Status</h5>
                     
-                    <div class="mb-3">
-                        <?php 
-                            $status = $data['order']['status'];
-                            $badgeClass = 'bg-secondary'; // Default
+                    <?php Flasher::flash(); ?>
 
-                            if($status == 'pending') {
-                                $badgeClass = 'bg-warning text-dark';
-                            } elseif($status == 'paid' || $status == 'shipped' || $status == 'completed') {
-                                $badgeClass = 'bg-success';
-                            } elseif($status == 'cancelled') {
-                                $badgeClass = 'bg-danger';
-                            }
-                        ?>
-                        <span class="badge <?= $badgeClass; ?> fs-6 px-3 py-2 rounded-pill text-uppercase w-100 d-block text-center mb-2">
-                            <?= $status; ?>
-                        </span>
-
-                        <div class="text-center small fw-bold">
-                            <?php if($status == 'paid' || $status == 'shipped' || $status == 'completed'): ?>
-                                <span class="text-success"><i class="bi bi-check-circle-fill me-1"></i> SUDAH LUNAS</span>
-                            <?php else: ?>
-                                <span class="text-warning"><i class="bi bi-hourglass-split me-1"></i> BELUM LUNAS</span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <form action="<?= BASEURL; ?>/admin/orderUpdateStatus" method="post">
+                    <form action="<?= BASEURL; ?>/admin/updateOrder" method="POST">
                         <input type="hidden" name="order_id" value="<?= $data['order']['id']; ?>">
-                        <label class="fw-bold small mb-2">Update Status Manual:</label>
-                        <div class="input-group">
-                            <select name="status" class="form-select form-select-sm border-secondary">
-                                <option value="pending" <?= $status == 'pending' ? 'selected' : ''; ?>>Pending</option>
-                                <option value="paid" <?= $status == 'paid' ? 'selected' : ''; ?>>Paid (Dibayar)</option>
-                                <option value="shipped" <?= $status == 'shipped' ? 'selected' : ''; ?>>Shipped (Dikirim)</option>
-                                <option value="completed" <?= $status == 'completed' ? 'selected' : ''; ?>>Completed (Selesai)</option>
-                                <option value="cancelled" <?= $status == 'cancelled' ? 'selected' : ''; ?>>Cancelled (Batal)</option>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Status Saat Ini</label>
+                            <select name="status" class="form-select border-2" style="border-color: #D885A3;">
+                                <option value="pending" <?= $data['order']['status'] == 'pending' ? 'selected' : ''; ?>>⏳ Pending (Menunggu)</option>
+                                <option value="paid" <?= $data['order']['status'] == 'paid' ? 'selected' : ''; ?>>💰 Paid (Sudah Bayar)</option>
+                                <option value="shipping" <?= $data['order']['status'] == 'shipping' ? 'selected' : ''; ?>>🚚 Shipping (Dikirim)</option>
+                                <option value="completed" <?= $data['order']['status'] == 'completed' ? 'selected' : ''; ?>>✅ Completed (Selesai)</option>
+                                <option value="cancelled" <?= $data['order']['status'] == 'cancelled' ? 'selected' : ''; ?>>❌ Cancelled (Batal)</option>
                             </select>
-                            <button type="submit" class="btn btn-sm btn-dark">Update</button>
                         </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill">Simpan Perubahan</button>
                     </form>
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold text-muted text-uppercase mb-3">Info Pelanggan</h6>
-                    <p class="mb-1 fw-bold"><?= $data['order']['user_name']; ?></p>
-                    <p class="mb-1 small text-muted"><?= $data['order']['email']; ?></p>
-                    <p class="mb-1 small text-muted"><?= isset($data['order']['user_phone']) ? $data['order']['user_phone'] : '-'; ?></p>
-                    
-                    <hr>
-                    
-                    <h6 class="fw-bold text-muted text-uppercase mb-3">Alamat Pengiriman</h6>
-                    <p class="mb-0 text-muted small" style="line-height: 1.6;">
-                        <?= nl2br($data['order']['shipping_address']); ?>
-                    </p>
-                    
-                    <hr>
-                    
-                    <h6 class="fw-bold text-muted text-uppercase mb-3">Bukti Pembayaran</h6>
-                    <?php if(!empty($data['order']['payment_proof'])): ?>
-                        <div class="mb-3">
-                            <a href="<?= BASEURL; ?>/assets/img/payments/<?= $data['order']['payment_proof']; ?>" target="_blank">
-                                <img src="<?= BASEURL; ?>/assets/img/payments/<?= $data['order']['payment_proof']; ?>" class="img-fluid rounded shadow-sm border" alt="Bukti Transfer">
-                            </a>
-                        </div>
-                        <div class="alert alert-success small py-2 mb-0">
-                            <i class="bi bi-check-circle me-1"></i> Bukti terlampir.
-                        </div>
-                    <?php else: ?>
-                        <div class="alert alert-warning small py-2 mb-0">
-                            <i class="bi bi-exclamation-circle me-1"></i> Belum ada bukti.
-                        </div>
-                    <?php endif; ?>
+            <?php if(!empty($data['order']['payment_proof'])): ?>
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h5 class="fw-bold mb-3 text-start">Bukti Pembayaran</h5>
+                    <div class="position-relative overflow-hidden rounded border" style="cursor: pointer;">
+                        <img src="<?= BASEURL; ?>/assets/img/payments/<?= $data['order']['payment_proof']; ?>" 
+                             class="img-fluid" 
+                             alt="Bukti Transfer"
+                             onclick="window.open(this.src)">
+                    </div>
+                    <small class="text-muted mt-2 d-block"><i class="bi bi-zoom-in"></i> Klik gambar untuk memperbesar</small>
                 </div>
             </div>
-        </div>
+            <?php endif; ?>
 
-        <div class="col-md-8">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <h6 class="fw-bold text-muted text-uppercase mb-4">Item Pesanan</h6>
-                    
-                    <?php foreach($data['items'] as $item): ?>
-                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                        <img src="<?= BASEURL; ?>/assets/img/products/<?= isset($item['product_image']) ? $item['product_image'] : 'default.jpg'; ?>" 
-                             class="rounded-3 border" 
-                             style="width: 70px; height: 70px; object-fit: cover;">
-                        
-                        <div class="ms-3 flex-grow-1">
-                            <h6 class="fw-bold mb-1"><?= isset($item['product_name']) ? $item['product_name'] : $item['name']; ?></h6>
-                            <small class="text-muted">
-                                Rp <?= number_format($item['price'], 0, ',', '.'); ?> x <?= $item['quantity']; ?> pcs
-                            </small>
-                        </div>
-                        
-                        <div class="fw-bold fs-6">
-                            Rp <?= number_format($item['price'] * $item['quantity'], 0, ',', '.'); ?>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4 pt-2">
-                        <span class="fs-5 fw-bold text-dark">Total Transaksi</span>
-                        <span class="fs-3 fw-bold text-primary">Rp <?= number_format($data['order']['total_amount'], 0, ',', '.'); ?></span>
-                    </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Info Pelanggan</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><small class="text-muted d-block">Nama</small> <strong><?= $data['order']['user_name']; ?></strong></li>
+                        <li class="mb-2"><small class="text-muted d-block">Email</small> <?= $data['order']['email']; ?></li>
+                        <li class="mb-2"><small class="text-muted d-block">Tanggal</small> <?= date('d M Y H:i', strtotime($data['order']['created_at'])); ?></li>
+                        <li class="mb-2"><small class="text-muted d-block">Metode Bayar</small> <span class="badge bg-secondary"><?= strtoupper($data['order']['payment_method']); ?></span></li>
+                        <li><small class="text-muted d-block">Alamat Pengiriman</small> <?= $data['order']['shipping_address']; ?></li>
+                    </ul>
                 </div>
             </div>
         </div>

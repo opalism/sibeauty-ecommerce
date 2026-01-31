@@ -62,9 +62,9 @@
                                         </td>
                                         <td class="pe-4 text-end">
                                             <a href="<?= BASEURL; ?>/cart/delete/<?= $item['id']; ?>" 
-                                               class="btn btn-sm btn-outline-danger border-0" 
-                                               onclick="return confirm('Yakin ingin menghapus produk ini?');">
-                                                <i class="bi bi-trash-fill"></i>
+                                            class="btn btn-sm btn-outline-danger" 
+                                            onclick="return confirm('Hapus?');">
+                                            <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
                                     </tr>

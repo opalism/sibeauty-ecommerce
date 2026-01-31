@@ -1,72 +1,60 @@
-<footer class="pt-5 pb-4 mt-5" style="background-color: #fdfbfb; border-top: 1px solid #eee;">
+<footer class="bg-white pt-5 pb-4 border-top mt-auto">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <img src="<?= BASEURL; ?>/assets/img/logo.png" alt="SIBEAUTY Logo" height="40" class="mb-3">
-                    <p class="text-muted small pe-lg-5">
-                        SIBEAUTY adalah destinasi utama Anda untuk produk kecantikan premium. Kami berkomitmen menghadirkan produk perawatan kulit dan kosmetik asli yang telah terverifikasi BPOM.
-                    </p>
-                    <div class="mt-3">
-                        <a href="#" class="text-dark me-3 fs-5"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-dark me-3 fs-5"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="text-dark me-3 fs-5"><i class="bi bi-tiktok"></i></a>
-                    </div>
+                    <a href="<?= BASEURL; ?>" class="d-flex align-items-center text-dark text-decoration-none mb-3">
+                        <img src="<?= BASEURL; ?>/assets/img/logo.png" alt="Logo" width="40" height="40" class="me-2">
+                        <span class="fs-4 fw-bold" style="letter-spacing: -1px;">Sibeauty.</span>
+                    </a>
+                    <p class="text-muted small">Platform e-commerce skincare nomor #1 di Indonesia dengan produk 100% original dan terpercaya.</p>
                 </div>
-
-                <div class="col-lg-2 col-6">
-                    <h6 class="fw-bold mb-3 small text-uppercase" style="color: #D885A3;">Layanan Pelanggan</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Pusat Bantuan</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-2 col-6">
-                    <h6 class="fw-bold mb-3 small text-uppercase" style="color: #D885A3;">Jelajahi</h6>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold mb-3">Belanja</h6>
                     <ul class="list-unstyled small">
                         <li class="mb-2"><a href="<?= BASEURL; ?>/product" class="text-decoration-none text-muted">Semua Produk</a></li>
-                        <li class="mb-2"><a href="<?= BASEURL; ?>/auth/register" class="text-decoration-none text-muted">Daftar Akun</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Tentang Kami</a></li>
-                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Hubungi Kami</a></li>
+                        <li class="mb-2"><a href="<?= BASEURL; ?>/product/category/1" class="text-decoration-none text-muted">Skincare</a></li>
+                        <li class="mb-2"><a href="<?= BASEURL; ?>/product/category/2" class="text-decoration-none text-muted">Make Up</a></li>
                     </ul>
                 </div>
-
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold mb-3">Bantuan</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="https://wa.me/6283195725280" target="_blank" class="text-decoration-none text-muted">Hubungi CS</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Cara Belanja</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted">Konfirmasi Pembayaran</a></li>
+                    </ul>
+                </div>
                 <div class="col-lg-4 col-md-6">
-                    <h6 class="fw-bold mb-3 small text-uppercase" style="color: #D885A3;">Metode Pembayaran</h6>
-                    <div class="d-flex flex-wrap gap-2 mb-4">
-                        <div class="bg-white border rounded p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 65px; height: 35px;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="img-fluid" style="max-height: 20px;" alt="BCA">
-                        </div>
-                        <div class="bg-white border rounded p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 65px; height: 35px;">
-                            <img src="https://www.freelogovectors.net/wp-content/uploads/2023/02/bri-logo-freelogovectors.net_.png" class="img-fluid" style="max-height: 20px;" alt="BRI">
-                        </div>
-                    </div>
-
-                    <h6 class="fw-bold mb-3 small text-uppercase" style="color: #D885A3;">Logistik Pengiriman</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div class="bg-white border rounded p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 65px; height: 35px;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/New_Logo_JNE.png" class="img-fluid" style="max-height: 18px;" alt="JNE">
-                        </div>
-                        <div class="bg-white border rounded p-1 shadow-sm d-flex align-items-center justify-content-center" style="width: 65px; height: 35px;">
-                            <img src="https://jtexpress.vn/themes/jtexpress/assets/images/logo.png" class="img-fluid" style="max-height: 18px;" alt="J&T">
-                        </div>
-                    </div>
+                    <h6 class="fw-bold mb-3">Berlangganan</h6>
+                    <form action="#" class="d-flex gap-2">
+                        <input type="email" class="form-control form-control-sm" placeholder="Email kamu...">
+                        <button class="btn btn-dark btn-sm px-3">Daftar</button>
+                    </form>
                 </div>
             </div>
-
-            <hr class="my-4 text-muted opacity-25">
-
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0 small text-muted">&copy; <?= date('Y'); ?> <strong>SIBEAUTY</strong>. All Rights Reserved.</p>
-                </div>
-                <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
-                    <span class="small text-muted">Subang, Jawa Barat <i class="bi bi-geo-alt-fill text-danger"></i></span>
-                </div>
+            <hr class="my-4 text-muted">
+            <div class="text-center small text-muted">
+                &copy; 2026 Sibeauty Official. All rights reserved.
             </div>
         </div>
     </footer>
 
+    <a href="https://wa.me/6283195725280?text=Halo%20Admin%20Sibeauty,%20saya%20butuh%20bantuan%20nih..." 
+       target="_blank"
+       class="d-flex align-items-center justify-content-center text-decoration-none shadow-lg"
+       style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: #25D366; color: white; border-radius: 50%; z-index: 9999; transition: all 0.3s ease;">
+        <i class="bi bi-whatsapp fs-2"></i>
+    </a>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script src="<?= BASEURL; ?>/assets/js/script.js"></script>
+    
+    <style>
+        a[href*="wa.me"]:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5) !important;
+        }
+    </style>
 </body>
 </html>
